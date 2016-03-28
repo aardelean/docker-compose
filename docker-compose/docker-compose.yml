@@ -1,0 +1,29 @@
+version: '2'
+services:
+  rest-api:
+    build: ../rest-api/
+    ports:
+     - "8090:8090"
+    depends_on:
+     - mysql
+    environment:
+      db-user: 'admin'
+      db-pass: 'admin'
+      db-host: 'mysql'
+  mysql:
+    build: ../mysql/
+    volumes:
+         - /data/mysql:/var/lib/mysql
+    ports:
+         - "3306:3306"
+    environment:
+      MYSQL_USER: 'admin'
+      MYSQL_PASS: 'admin'
+      STARTUP_SQL: '/tmp/init.sql'
+  client-spa:
+    build: ../client-spa/
+    ports:
+     - "3000:3000"
+     - "3001:3001"
+    depends_on:
+     - rest-api
