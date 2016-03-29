@@ -37,6 +37,8 @@ CreateMySQLUser()
     PASS=${MYSQL_PASS:-$(pwgen -s 12 1)}
     _word=$( [ ${MYSQL_PASS} ] && echo "preset" || echo "random" )
     echo "=> Creating MySQL user ${MYSQL_USER} with ${_word} password"
+
+    mysql -uroot -e "GRANT USAGE ON *.* TO ${MYSQL_USER}@'%';"
     mysql -uroot -e "drop user ${MYSQL_USER}@'%';"
     mysql -uroot -e "flush privileges;"
     mysql -uroot -e "CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '$PASS'"
